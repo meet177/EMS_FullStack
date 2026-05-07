@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  ON_LEAVE
+  OFFBOARDED
+}
+
+enum UserRole {
+  ADMIN
+  EMPLOYEE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  HALF_DAY
+  WORK_FROM_HOME
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum LeaveType {
+  CASUAL
+  SICK
+  PAID
+  UNPAID
+  MATERNITY
+  PATERNITY
+  BEREAVEMENT
+}
+
+model User {
+  id             String         @id @default(cuid())
+  clerkId        String         @unique
+  email          String         @unique
+  name           String?
+  role           UserRole       @default(EMPLOYEE)
+  employee       Employee?
+  reviewedLeaves LeaveRequest[] @relation("LeaveReviewer")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([role])
+}
+
+model Department {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  code        String     @unique
+  description String?
+  managerId   String?
+  manager     Employee?  @relation("DepartmentManager", fields: [managerId], references: [id], onDelete: SetNull)
+  employees   Employee[] @relation("DepartmentEmployees")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([managerId])
+}
+
+model Employee {
+  id                String         @id @default(cuid())
+  userId            String?        @unique
+  user              User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+  departmentId      String
+  department        Department     @relation("DepartmentEmployees", fields: [departmentId], references: [id], onDelete: Restrict)
+  managedDepartment Department[]   @relation("DepartmentManager")
+  firstName         String
+  lastName          String
+  email             String         @unique
+  phone             String?
+  jobTitle          String
+  status            EmployeeStatus @default(ACTIVE)
+  salary            Int?
+  joinedAt          DateTime       @default(now())
+  attendances       Attendance[]
+  leaveRequests     LeaveRequest[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  @@index([departmentId])
+  @@index([status])
+  @@index([joinedAt])
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  employeeId String
+  employee   Employee         @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date       DateTime
+  checkIn    DateTime?
+  checkOut   DateTime?
+  status     AttendanceStatus @default(PRESENT)
+  notes      String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  @@unique([employeeId, date])
+  @@index([date])
+  @@index([status])
+}
+
+model LeaveRequest {
+  id         String      @id @default(cuid())
+  employeeId String
+  employee   Employee    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  reviewerId String?
+  reviewer   User?       @relation("LeaveReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  type       LeaveType
+  status     LeaveStatus @default(PENDING)
+  startDate  DateTime
+  endDate    DateTime
+  reason     String
+  reviewNote String?
+  reviewedAt DateTime?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([employeeId])
+  @@index([reviewerId])
+  @@index([status])
+  @@index([startDate, endDate])
+}
