@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { EmptyState } from "@/components/ui/empty-state";
 import { requireAdmin } from "@/lib/authz";
 import { getDashboardMetrics } from "@/lib/db/employees";
-import { formatCurrency, titleCase } from "@/lib/utils";
+import { titleCase } from "@/lib/utils";
 
 
 async function getDashboardData() {

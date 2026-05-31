@@ -1,8 +1,7 @@
 "use server";
 
-import { LeaveStatus, UserRole } from "@/generated/prisma/client";
+import { LeaveStatus, UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/authz";
 import { createLeaveRequest, LeaveRequestError, reviewLeaveRequest } from "@/lib/db/leave-requests";

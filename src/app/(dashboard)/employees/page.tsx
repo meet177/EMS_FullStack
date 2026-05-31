@@ -7,15 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { ErrorNotice } from "@/components/ui/error-notice";
 import { PageHeader } from "@/components/ui/page-header";
-import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { requireAdmin } from "@/lib/authz";
 import { getEmployeesPage } from "@/lib/db/employees";
 import { departments } from "@/lib/constants";
-import { getPageLoadErrorMessage } from "@/lib/errors";
 import { formatCurrency, titleCase } from "@/lib/utils";
 
 

@@ -1,10 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@prisma/client";
 import { getPrimaryAdminUser, getUserByClerkId, upsertUserFromClerk } from "@/lib/db/users";
-import { prisma } from "@/lib/prisma";
 
 function getRequestedRole(...metadataList: Array<Record<string, unknown> | undefined>) {
   return metadataList.some((metadata) => metadata?.role === UserRole.ADMIN) ? UserRole.ADMIN : UserRole.EMPLOYEE;

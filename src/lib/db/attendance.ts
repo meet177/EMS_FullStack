@@ -1,4 +1,4 @@
-import { AttendanceStatus, EmployeeStatus } from "@/generated/prisma/client";
+import { AttendanceStatus, EmployeeStatus } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 
@@ -29,14 +29,6 @@ export class AttendanceError extends Error {
 function startOfDay(date: Date) {
   const next = new Date(date);
   return new Date(Date.UTC(next.getUTCFullYear(), next.getUTCMonth(), next.getUTCDate()));
-}
-
-function combineDateAndTime(date: Date, time?: Date) {
-  if (!time) return undefined;
-
-  const next = startOfDay(date);
-  next.setHours(time.getHours(), time.getMinutes(), 0, 0);
-  return next;
 }
 
 function getMonthRange(month?: string) {
@@ -327,4 +319,3 @@ export async function getMonthlyAttendancePercentageReport(monthStr: string, dep
     report
   };
 }
-

@@ -1,9 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@prisma/client";
 import { getCurrentUser } from "@/lib/authz";
 import { AttendanceError, upsertAttendance } from "@/lib/db/attendance";
 import { isClerkConfigured } from "@/lib/env";
@@ -30,10 +29,6 @@ function parseTime(time?: string) {
   const date = new Date();
   date.setHours(hours, minutes, 0, 0);
   return date;
-}
-
-function isSameCalendarDay(first: Date, second: Date) {
-  return first.getFullYear() === second.getFullYear() && first.getMonth() === second.getMonth() && first.getDate() === second.getDate();
 }
 
 export async function markAttendance(_: AttendanceActionState, formData: FormData): Promise<AttendanceActionState> {

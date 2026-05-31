@@ -1,5 +1,6 @@
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { getAccessContext } from "@/lib/authz";
+import { isClerkConfigured } from "@/lib/env";
 
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -9,7 +10,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <DashboardShell
-      clerkEnabled={true}
+      clerkEnabled={isClerkConfigured()}
       isAdmin={isAdmin}
       profileHref={profileHref}
       userName={userName}

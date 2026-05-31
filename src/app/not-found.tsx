@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { getOptionalAccessContext } from "@/lib/authz";
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@prisma/client";
 
 
 

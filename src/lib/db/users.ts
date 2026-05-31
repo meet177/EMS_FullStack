@@ -1,4 +1,4 @@
-import { Prisma, UserRole } from "@/generated/prisma/client";
+import { Prisma, UserRole } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 
@@ -101,13 +101,23 @@ export async function upsertUserFromClerk(input: UpsertUserInput) {
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-      return prisma.user.findFirst({
+      const user = await prisma.user.findFirst({
         where: {
           OR: [{ clerkId: input.clerkId }, { email: input.email }]
         },
         include: { employee: true }
       });
+
+      if (user) {
+        return user;
+      }
     }
+
+    console.error("Failed to upsert Clerk user", {
+      code: error instanceof Prisma.PrismaClientKnownRequestError ? error.code : undefined,
+      email: input.email,
+      role
+    });
 
     throw error;
   }

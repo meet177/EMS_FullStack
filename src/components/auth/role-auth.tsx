@@ -2,7 +2,7 @@ import { SignIn, SignUp } from "@clerk/nextjs";
 import { BriefcaseBusiness, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@prisma/client";
 import { ConfirmSignOutButton } from "@/components/auth/confirm-sign-out-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -164,7 +164,6 @@ export async function RoleSignIn({ role }: { role: AuthRole }) {
     );
   }
 
-  const config = roleConfig[role];
   const redirectUrl = role === "employee" ? "/employee/onboarding" : "/dashboard";
 
   return (

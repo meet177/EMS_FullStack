@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, Percent, UserCheck, Users, Search, Filter, ArrowUpRight } from "lucide-react";
+import { CalendarDays, Percent, Users, Filter } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { AttendanceStatus, UserRole } from "@/generated/prisma/client";
-import { attendanceStatuses, departments } from "@/lib/constants";
+import { AttendanceStatus } from "@prisma/client";
+import { departments } from "@/lib/constants";
 import { 
   getAttendanceSummary, 
   getDailyAttendanceReport, 
@@ -22,7 +22,6 @@ import {
 } from "@/lib/db/attendance";
 import { getAccessContext } from "@/lib/authz";
 import { isClerkConfigured } from "@/lib/env";
-import { getPageLoadErrorMessage } from "@/lib/errors";
 import { titleCase } from "@/lib/utils";
 
 
@@ -96,13 +95,6 @@ export default async function AttendancePage({ searchParams }: AttendancePagePro
 
   // --- RENDER EMPLOYEE VIEW ---
   if (!isAdmin) {
-    const stats = [
-      { label: "Marked records", value: employeeSummary?.totalRecords ?? 0, hint: `${employeeSummary?.markedDays ?? 0} marked days`, icon: CalendarDays },
-      { label: "Attendance rate", value: `${employeeSummary?.attendanceRate ?? 0}%`, hint: "Present, late, half day, or WFH", icon: Percent },
-      { label: "Late marks", value: employeeSummary?.late ?? 0, hint: "Requires attention", icon: Clock },
-      { label: "Completion", value: `${employeeSummary?.completionRate ?? 0}%`, hint: "Marked records vs expected marks", icon: UserCheck }
-    ];
-
     return (
       <div className="space-y-6">
         <PageHeader title="Attendance" description="Mark your attendance and review your monthly history." icon={Users} />

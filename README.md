@@ -93,8 +93,8 @@ This project is optimized for deployment on Vercel.
 
 1. **Push your code to a GitHub repository.**
 2. **Create a new project on Vercel** and import your repository.
-3. **Configure Environment Variables:** In the Vercel project settings, add all the environment variables listed above. (Ensure `DATABASE_URL` points to your production database, e.g., Supabase, Neon, or Railway).
-4. **Build Settings:** Vercel automatically detects Next.js. The build command will naturally execute `npm run build`. Note that the `postinstall` script in `package.json` will automatically run `prisma generate`.
-5. **Database Migrations (Production):** 
-   You can add a build step or run `npx prisma migrate deploy` in your deployment pipeline to ensure your production database schema is up to date.
+3. **Configure Environment Variables:** In the Vercel project settings, add all the environment variables listed above. Ensure `DATABASE_URL` points to your production PostgreSQL database, e.g. Supabase, Neon, or Railway.
+4. **Build Settings:** The included `vercel.json` runs `npm run vercel-build`, which generates Prisma Client, deploys Prisma migrations to the production database, and then builds Next.js.
+5. **Database Migrations (Production):**
+   If you do not deploy through Vercel, run `npm run prisma:deploy` before starting the production app so the login flow can create or update users safely.
 6. **Deploy!**

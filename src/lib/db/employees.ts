@@ -1,4 +1,4 @@
-import { EmployeeStatus, LeaveStatus, type Prisma } from "@/generated/prisma/client";
+import { EmployeeStatus, LeaveStatus, type Prisma } from "@prisma/client";
 
 import { ensureDepartmentByCode, getDepartmentHeadcount } from "@/lib/db/departments";
 import { prisma } from "@/lib/prisma";
