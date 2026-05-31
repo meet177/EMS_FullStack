@@ -108,6 +108,7 @@ Required variables:
 
 ```env
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ems_fullstack?schema=public"
+DIRECT_URL="postgresql://postgres:postgres@localhost:5432/ems_fullstack?schema=public"
 
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_your_key"
 CLERK_SECRET_KEY="sk_test_your_key"
@@ -117,7 +118,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/dashboard"
 ```
 
-For production, `DATABASE_URL` must point to a hosted PostgreSQL database such as Neon, Supabase, Railway, or another cloud Postgres provider. Do not use `localhost` on Vercel.
+For production, `DATABASE_URL` must point to a hosted PostgreSQL database such as Neon, Supabase, Railway, or another cloud Postgres provider. Do not use `localhost` on Vercel. If your provider has both pooled and direct URLs, use the pooled URL for `DATABASE_URL` and the direct URL for `DIRECT_URL`.
 
 ### 3. Start PostgreSQL locally
 
@@ -201,7 +202,8 @@ prisma generate && prisma migrate deploy && next build
 Set these in Vercel Project Settings:
 
 ```env
-DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
+DATABASE_URL="postgresql://user:password@pooled-host/database?sslmode=require"
+DIRECT_URL="postgresql://user:password@direct-host/database?sslmode=require"
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_live_or_pk_test_key"
 CLERK_SECRET_KEY="sk_live_or_sk_test_key"
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
@@ -214,6 +216,7 @@ Important deployment notes:
 
 - The Vercel project root should be `ems_fullstack`.
 - `DATABASE_URL` must be a hosted PostgreSQL URL, not `localhost`.
+- For Neon, `DATABASE_URL` should be the pooled connection string and `DIRECT_URL` should be the direct connection string. Prisma migrations use `DIRECT_URL`, which avoids migration lock timeouts on the pooler.
 - Use Clerk production keys for a production Clerk instance.
 - In Clerk, configure the production domain for your deployed site, for example `managewise-ems.vercel.app`.
 - After changing environment variables, redeploy the Vercel project.
