@@ -77,7 +77,7 @@ const employees = employeeRows.map(([firstName, lastName, jobTitle, departmentCo
     phone: `+91 98765 ${String(43010 + index)}`,
     jobTitle,
     departmentCode,
-    status: group === 1 ? EmployeeStatus.ON_LEAVE : EmployeeStatus.ACTIVE,
+    status: todayStatusByGroup[group] === AttendanceStatus.ABSENT ? EmployeeStatus.ON_LEAVE : EmployeeStatus.ACTIVE,
     salary,
     joinedAt: new Date(joinedAt),
     todayStatus: todayStatusByGroup[group],
@@ -109,9 +109,9 @@ const leaveRequests = [
   ["seed_leave_003", "isha.rao@managewise.example", LeaveType.SICK, LeaveStatus.PENDING, 23, 23, "Doctor appointment and rest.", null],
   ["seed_leave_004", "priya.menon@managewise.example", LeaveType.CASUAL, LeaveStatus.PENDING, 27, 27, "Personal work requiring one day away.", null],
   ["seed_leave_005", "leena.thomas@managewise.example", LeaveType.PAID, LeaveStatus.PENDING, 29, 30, "Long weekend leave request.", null],
-  ["seed_leave_006", "dev.bansal@managewise.example", LeaveType.SICK, LeaveStatus.APPROVED, 6, 6, "Recovering from fever.", "Approved. Sprint tasks were reassigned for the day."],
-  ["seed_leave_007", "naina.kapoor@managewise.example", LeaveType.BEREAVEMENT, LeaveStatus.APPROVED, 10, 12, "Family bereavement.", "Approved with full support from the People team."],
-  ["seed_leave_008", "vikram.reddy@managewise.example", LeaveType.PATERNITY, LeaveStatus.APPROVED, 15, 19, "Paternity leave for family care.", "Approved. Finance approvals delegated to Aditi."],
+  ["seed_leave_006", "meera.nair@managewise.example", LeaveType.PAID, LeaveStatus.APPROVED, 6, 6, "Planned leave for personal work.", "Approved with product ownership covered by Vihaan."],
+  ["seed_leave_007", "vihaan.desai@managewise.example", LeaveType.SICK, LeaveStatus.APPROVED, 10, 12, "Medical rest advised by doctor.", "Approved. Product ceremonies were reassigned for the week."],
+  ["seed_leave_008", "isha.rao@managewise.example", LeaveType.CASUAL, LeaveStatus.APPROVED, 15, 19, "Personal time off after design review.", "Approved after design handoff was completed."],
   ["seed_leave_009", "sana.qureshi@managewise.example", LeaveType.UNPAID, LeaveStatus.REJECTED, 11, 13, "Extended personal travel.", "Rejected because customer interviews are scheduled that week."],
   ["seed_leave_010", "sameer.khan@managewise.example", LeaveType.CASUAL, LeaveStatus.REJECTED, 18, 18, "Personal errand during reporting close.", "Rejected because monthly analytics close requires coverage."]
 ] as const;
