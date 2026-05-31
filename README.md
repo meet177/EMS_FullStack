@@ -2,6 +2,10 @@
 
 ManageWise EMS is a full-stack Employee Management System for managing employees, departments, attendance, leave requests, and role-based access for admins and employees. It is built with Next.js App Router, Clerk authentication, Prisma, PostgreSQL, and a responsive Tailwind UI.
 
+## Live Demo
+
+Try the deployed app: [https://managewise-ems.vercel.app/](https://managewise-ems.vercel.app/)
+
 ## Features
 
 - **Role-based authentication**
