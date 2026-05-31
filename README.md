@@ -1,100 +1,239 @@
-# Employee Management System (EMS)
+# ManageWise EMS
 
-## Project Overview
-
-The Employee Management System (EMS) is a modern, full-stack web application designed to streamline HR and administrative tasks. It provides a centralized platform for managing employee records, tracking attendance, handling leave requests, and organizing departmental structures. Built with a focus on user experience and performance, the application ensures secure and efficient management of workforce data.
+ManageWise EMS is a full-stack Employee Management System for managing employees, departments, attendance, leave requests, and role-based access for admins and employees. It is built with Next.js App Router, Clerk authentication, Prisma, PostgreSQL, and a responsive Tailwind UI.
 
 ## Features
 
-- **Authentication & Authorization**: Secure user login and registration powered by Clerk, with role-based access control (Admin vs. Employee).
-- **Dashboard Overview**: Get a bird's-eye view of employee statistics, attendance trends, and pending leave requests.
-- **Employee Management**: Add, update, and manage employee profiles including their personal details, job titles, and status.
-- **Department Organization**: Create and manage company departments, assign managers, and group employees.
-- **Attendance Tracking**: Keep track of employee check-ins, check-outs, and daily attendance status.
-- **Leave Management**: Employees can submit leave requests (Sick, Casual, Paid, etc.), and managers/admins can review, approve, or reject them.
-- **Responsive Design**: A beautiful, fully responsive UI built with Tailwind CSS and shadcn/ui components.
+- **Role-based authentication**
+  - Clerk-powered sign in and sign up.
+  - Separate admin and employee entry points.
+  - Admin-only routes for workforce management.
+  - Employee-only profile, attendance, and leave flows.
+
+- **Admin dashboard**
+  - Workforce summary cards for total employees, active employees, departments, and pending leave requests.
+  - Department headcount chart.
+  - Employee status chart for active and on-leave employees.
+  - Recent hires and department distribution overview.
+
+- **Employee directory**
+  - Paginated employee table.
+  - Prefix-prioritized search by name, email, role, and department.
+  - Department filtering.
+  - Sortable columns for name, department, role, status, salary, and joined date.
+  - Employee detail pages with profile, salary, department, and status information.
+  - Admin employee edit actions.
+
+- **Employee onboarding**
+  - Employees can create their profile after sign up.
+  - Employee accounts are linked to their Clerk user.
+  - Existing employee records can be linked by matching email.
+
+- **Attendance management**
+  - Employees can mark daily attendance.
+  - Admins can view daily attendance reports by date and department.
+  - Monthly attendance percentage tracking.
+  - Attendance statuses include Present, Absent, Late, Half Day, and Work From Home.
+  - Employee yearly attendance overview.
+
+- **Leave management**
+  - Employees can submit leave requests.
+  - Admins can review, approve, or reject pending requests.
+  - Leave types include Casual, Sick, Paid, Unpaid, Maternity, Paternity, and Bereavement.
+  - Employees can view monthly and yearly approved leave totals.
+  - Admins can see approved leave counts while reviewing requests.
+
+- **Department management**
+  - Seeded departments with managers.
+  - Department headcount reporting.
+  - Employee-to-department assignment.
+
+- **Account actions**
+  - Sign out confirmation.
+  - Account deletion action for linked Clerk users and local records.
+
+- **Production-ready deployment setup**
+  - Vercel build command included.
+  - Prisma Client generated during deployment.
+  - Prisma migrations deployed before the Next.js build.
+  - Standard `@prisma/client` generation for Vercel/Linux compatibility.
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15 (App Router), React 19, Tailwind CSS, shadcn/ui, Recharts
-- **Backend**: Next.js Server Actions & API Routes
-- **Database**: PostgreSQL
-- **ORM**: Prisma
-- **Authentication**: Clerk
-- **Form Handling & Validation**: React Hook Form, Zod
-- **Language**: TypeScript
+- **Framework:** Next.js 15 App Router
+- **UI:** React 19, Tailwind CSS, shadcn-style components
+- **Charts:** Recharts
+- **Authentication:** Clerk
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Validation:** Zod
+- **Forms:** React Hook Form
+- **Icons:** Lucide React
+- **Language:** TypeScript
+- **Deployment:** Vercel
 
-## Installation Steps
+## Project Structure
 
-Follow these steps to set up the project locally:
+```text
+ems_fullstack/
+  prisma/
+    migrations/          Database migrations
+    schema.prisma        Prisma schema
+    seed.ts              Demo data seed script
+  src/
+    actions/             Server actions
+    app/                 Next.js App Router pages and API routes
+    components/          UI, auth, dashboard, employee, attendance, leave components
+    lib/                 Auth, database helpers, validation, utilities
+  vercel.json            Vercel build configuration
+```
 
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd ems_fullstack
-   ```
+## Getting Started
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+### 1. Install dependencies
 
-3. **Set up environment variables:**
-   Copy the example environment file and fill in the required values.
-   ```bash
-   cp .env.example .env
-   ```
+```bash
+npm install
+```
 
-4. **Set up the Database:**
-   If you have Docker installed, you can spin up a local PostgreSQL instance:
-   ```bash
-   docker compose up -d
-   ```
-   Apply the database migrations and generate the Prisma client:
-   ```bash
-   npm run prisma:generate
-   npm run prisma:migrate
-   ```
+### 2. Configure environment variables
 
-5. **Seed the Database (Optional):**
-   Populate the database with initial dummy data for testing.
-   ```bash
-   npm run db:seed
-   ```
+Create `.env` from the example file:
 
-6. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+```bash
+cp .env.example .env
+```
 
-## Environment Variables
-
-To run this project, you will need to add the following environment variables to your `.env` file:
+Required variables:
 
 ```env
-# Database connection string (PostgreSQL)
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ems_fullstack?schema=public"
 
-# Clerk Authentication Keys
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_your_key"
 CLERK_SECRET_KEY="sk_test_your_key"
-
-# Clerk Redirect URLs
 NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
 NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/dashboard"
 ```
 
-## Deployment Guide
+For production, `DATABASE_URL` must point to a hosted PostgreSQL database such as Neon, Supabase, Railway, or another cloud Postgres provider. Do not use `localhost` on Vercel.
 
-This project is optimized for deployment on Vercel.
+### 3. Start PostgreSQL locally
 
-1. **Push your code to a GitHub repository.**
-2. **Create a new project on Vercel** and import your repository.
-3. **Configure Environment Variables:** In the Vercel project settings, add all the environment variables listed above. Ensure `DATABASE_URL` points to your production PostgreSQL database, e.g. Supabase, Neon, or Railway.
-4. **Build Settings:** The included `vercel.json` runs `npm run vercel-build`, which generates Prisma Client, deploys Prisma migrations to the production database, and then builds Next.js.
-5. **Database Migrations (Production):**
-   If you do not deploy through Vercel, run `npm run prisma:deploy` before starting the production app so the login flow can create or update users safely.
-6. **Deploy!**
+If Docker is available:
+
+```bash
+docker compose up -d
+```
+
+### 4. Generate Prisma Client and migrate
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+```
+
+### 5. Seed demo data
+
+```bash
+npm run db:seed
+```
+
+The seed script resets the demo data tables and creates:
+
+- 10 departments
+- 25 employees
+- 500 attendance records
+- 10 leave requests
+- 5 employees marked Present today
+- 5 employees marked Absent today
+- 5 employees marked Work From Home today
+- 5 employees marked Half Day today
+- 5 employees marked Late today
+- 5 employees on leave
+- 5 pending leave requests
+- 3 approved leave requests
+- 2 rejected leave requests with review reasons
+
+### 6. Run the app
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Scripts
+
+```bash
+npm run dev              # Start local development server
+npm run build            # Build production Next.js app
+npm run start            # Start production server
+npm run lint             # Run Next.js lint
+npm run vercel-build     # Generate Prisma, deploy migrations, build Next.js
+npm run prisma:generate  # Generate Prisma Client
+npm run prisma:migrate   # Create/apply local Prisma migrations
+npm run prisma:deploy    # Apply migrations in production
+npm run prisma:status    # Check migration status
+npm run prisma:studio    # Open Prisma Studio
+npm run db:seed          # Seed demo data
+```
+
+## Deployment
+
+This project is configured for Vercel through `vercel.json`.
+
+Vercel runs:
+
+```bash
+npm run vercel-build
+```
+
+That command runs:
+
+```bash
+prisma generate && prisma migrate deploy && next build
+```
+
+### Vercel environment variables
+
+Set these in Vercel Project Settings:
+
+```env
+DATABASE_URL="postgresql://user:password@host/database?sslmode=require"
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_live_or_pk_test_key"
+CLERK_SECRET_KEY="sk_live_or_sk_test_key"
+NEXT_PUBLIC_CLERK_SIGN_IN_URL="/sign-in"
+NEXT_PUBLIC_CLERK_SIGN_UP_URL="/sign-up"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL="/dashboard"
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL="/dashboard"
+```
+
+Important deployment notes:
+
+- The Vercel project root should be `ems_fullstack`.
+- `DATABASE_URL` must be a hosted PostgreSQL URL, not `localhost`.
+- Use Clerk production keys for a production Clerk instance.
+- In Clerk, configure the production domain for your deployed site, for example `managewise-ems.vercel.app`.
+- After changing environment variables, redeploy the Vercel project.
+
+## Database Notes
+
+The Prisma schema models:
+
+- `User`
+- `Department`
+- `Employee`
+- `Attendance`
+- `LeaveRequest`
+
+The app uses standard `@prisma/client` generation. Generated Prisma files are not committed to the repository.
+
+## Demo Data Notes
+
+The seed script is intentionally strict. It clears existing employee, attendance, leave, user, and department records before inserting the demo dataset. Run it only on a development/demo database, not on a database containing real production data.
+
+## License
+
+This project is private and intended for portfolio/demo use.
