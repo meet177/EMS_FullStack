@@ -1,4 +1,4 @@
-import { EmployeeStatus, LeaveStatus, type Prisma } from "@prisma/client";
+import { AttendanceStatus, EmployeeStatus, LeaveStatus, type Prisma } from "@prisma/client";
 
 import { ensureDepartmentByCode, getDepartmentHeadcount } from "@/lib/db/departments";
 import { prisma } from "@/lib/prisma";
@@ -29,6 +29,14 @@ export async function syncEmployeeStatuses(txOrPrisma: any = prisma) {
         },
         select: { id: true },
         take: 1
+      },
+      attendances: {
+        where: {
+          date: todayUTC,
+          status: AttendanceStatus.ABSENT
+        },
+        select: { id: true },
+        take: 1
       }
     }
   });
@@ -37,7 +45,7 @@ export async function syncEmployeeStatuses(txOrPrisma: any = prisma) {
   const toActive: string[] = [];
 
   for (const emp of employees) {
-    const hasActiveLeave = emp.leaveRequests.length > 0;
+    const hasActiveLeave = emp.leaveRequests.length > 0 || emp.attendances.length > 0;
     if (hasActiveLeave && emp.status !== EmployeeStatus.ON_LEAVE) {
       toOnLeave.push(emp.id);
     } else if (!hasActiveLeave && emp.status === EmployeeStatus.ON_LEAVE) {
