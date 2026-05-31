@@ -35,14 +35,29 @@ export function DashboardCharts({
           <CardDescription>Headcount distribution across teams.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-80">
+          <div className="h-[420px]">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={departmentData} margin={{ left: -20, right: 12 }}>
-                <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={10} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
-                <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }} />
+              <BarChart data={departmentData} layout="vertical" margin={{ top: 4, right: 18, bottom: 4, left: 8 }}>
+                <CartesianGrid stroke="hsl(var(--border))" strokeDasharray="3 3" horizontal={false} />
+                <XAxis
+                  type="number"
+                  allowDecimals={false}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={180}
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 12 }}
+                />
                 <Tooltip
                   cursor={{ fill: "hsl(var(--muted))" }}
+                  formatter={(value) => [value, "Employees"]}
                   contentStyle={{
                     background: "hsl(var(--card))",
                     border: "1px solid hsl(var(--border))",
@@ -51,7 +66,7 @@ export function DashboardCharts({
                   }}
                   labelStyle={{ color: "hsl(var(--foreground))" }}
                 />
-                <Bar dataKey="employees" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="employees" fill="hsl(var(--primary))" radius={[0, 6, 6, 0]} barSize={18} />
               </BarChart>
             </ResponsiveContainer>
           </div>
